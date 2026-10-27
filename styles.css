@@ -1,4 +1,4 @@
-/* Homework 2: external stylesheet for my cybersecurity page. */
+/* Homework 3: mobile-first responsive layout using Grid and Flexbox. */
 /* Type selectors: body, header, nav, section, and more. */
 :root {
     --bg: #0b1020;
@@ -18,10 +18,12 @@
 
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: 1rem;
 }
 
 body {
     margin: 0;
+    overflow-wrap: anywhere;
     font-family: Arial, Helvetica, sans-serif;
     background: linear-gradient(180deg, #0b1020 0%, #111827 100%);
     color: var(--text);
@@ -31,7 +33,7 @@ body {
 header {
     background: linear-gradient(135deg, rgba(125, 211, 252, 0.18), rgba(167, 139, 250, 0.12));
     border-bottom: 1px solid var(--border);
-    padding: 2rem 1.25rem 1.5rem;
+    padding: 2rem 0 1.5rem;
 }
 
 .container {
@@ -45,7 +47,7 @@ h1, h2, h3 {
 }
 
 .title {
-    font-size: clamp(2.2rem, 4vw, 4rem);
+    font-size: clamp(2rem, 4vw, 3.5rem);
     margin-bottom: 0.75rem;
 }
 
@@ -64,12 +66,13 @@ nav ul {
     padding: 0;
     margin: 0;
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     gap: 0.75rem;
 }
 
 nav a {
-    display: inline-block;
+    display: block;
     text-decoration: none;
     color: var(--text);
     background: rgba(255, 255, 255, 0.06);
@@ -88,22 +91,30 @@ main {
     padding: 2rem 0 3rem;
 }
 
-section {
-    margin-bottom: 2rem;
+/* Grid children may shrink below their intrinsic text width. */
+.page-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
 }
+section, article, .about-layout > *, .goals-grid > * {
+    min-width: 0;
+}
+section { margin: 0; }
+section > .card { margin: 0; }
 
 .card {
     background: rgba(18, 26, 43, 0.9);
     border: 1px solid var(--border);
     border-radius: 16px;
-    padding: 1.5rem;
+    padding: 1rem;
     margin: 0 0 1.5rem;
     box-shadow: 0 10px 30px var(--shadow);
 }
 
 .about-layout {
     display: grid;
-    grid-template-columns: 1.3fr 0.9fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
     align-items: center;
 }
@@ -143,7 +154,7 @@ li {
 
 .goals-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.25rem;
 }
 
@@ -163,14 +174,22 @@ footer {
     color: var(--muted);
 }
 
-@media (max-width: 700px) {
+/* Tablet: horizontal navigation, two-column introduction and goals. */
+@media (min-width: 600px) {
+    nav ul { flex-direction: row; }
+    .card { padding: 1.5rem; }
     .about-layout {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
     }
+    .goals-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 
-    .card {
-        padding: 1.2rem;
-    }
+/* Desktop: introduction spans both columns; interests sit beside goals. */
+@media (min-width: 1000px) {
+    .page-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); }
+    #about { grid-column: 1 / -1; }
+    #interests > .card { height: 100%; }
+    header { padding-top: 3rem; }
 }
 
 /* ID selector: highlight the introduction with the sky-blue accent. */
